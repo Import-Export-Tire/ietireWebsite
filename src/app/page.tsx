@@ -78,16 +78,30 @@ const Tire3D = ({ className = "", spinning = false }: { className?: string; spin
   </motion.svg>
 );
 
-const brands = [
-  { name: "Falken", tier: "premium", logo: "/images/brands/falken.svg" },
-  { name: "Kenda", tier: "premium", logo: "/images/brands/kenda.webp" },
-  { name: "Atturo", tier: "premium", logo: "/images/brands/atturo.webp" },
-  { name: "Milestar", tier: "performance", logo: "/images/brands/milestar.webp" },
-  { name: "Lionhart", tier: "performance", logo: "/images/brands/lionhart.webp" },
-  { name: "American Roadstar", tier: "performance", logo: "/images/brands/american-roadstar.webp" },
-  { name: "RBP", tier: "value", logo: "/images/brands/rbp.webp" },
-  { name: "Lancaster", tier: "value", logo: "/images/brands/lancaster.png" },
+const featuredBrands = [
+  { name: "Falken", logo: "/images/brands/falken.svg" },
+  { name: "Milestar", logo: "/images/brands/milestar.webp" },
+  { name: "Cosmo", logo: "/images/brands/cosmo.webp" },
+  { name: "Lanvigator", logo: "/images/brands/lanvigator.webp" },
+  { name: "Atturo", logo: "/images/brands/atturo.webp" },
+  { name: "Kenda", logo: "/images/brands/kenda.webp" },
+  { name: "Lexani", logo: "/images/brands/lexani.webp" },
+  { name: "Lionhart", logo: "/images/brands/lionhart.webp" },
+  { name: "RBP", logo: "/images/brands/rbp.webp" },
+  { name: "Arroyo", logo: "/images/brands/arroyo.png" },
+  { name: "American Roadstar", logo: "/images/brands/american-roadstar.webp" },
 ];
+
+const allBrands = [
+  "American Roadstar", "Arroyo", "Atturo",
+  "Cosmo",
+  "Falken",
+  "Kenda",
+  "Lancaster", "Lanvigator", "Lexani", "Lionhart",
+  "Milestar",
+  "RBP",
+  "Venom Power",
+].sort();
 
 const jobs = [
   {
@@ -233,11 +247,33 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeJob, setActiveJob] = useState<string | null>(null);
   const [showReturnToTop, setShowReturnToTop] = useState(false);
+  const [showAllBrands, setShowAllBrands] = useState(false);
+  const [showCareersModal, setShowCareersModal] = useState(false);
+  const [contactForm, setContactForm] = useState({ name: "", business: "", email: "", phone: "", message: "" });
+  const [contactSubmitted, setContactSubmitted] = useState(false);
 
   // New state for job detail view
   const [viewingJob, setViewingJob] = useState<any | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [showLocationSelector, setShowLocationSelector] = useState(false);
+
+  // Open careers modal if #careers hash is in URL
+  useEffect(() => {
+    if (window.location.hash === '#careers') {
+      setShowCareersModal(true);
+      window.history.replaceState(null, '', '/');
+    }
+  }, []);
+
+  // Lock body scroll when careers modal is open
+  useEffect(() => {
+    if (showCareersModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [showCareersModal]);
 
   // Track scroll position for return to top button
   useEffect(() => {
@@ -571,7 +607,7 @@ export default function Home() {
             </motion.div>
 
             <div className="hidden md:flex items-center gap-1">
-              {["About", "Brands", "Services", "Careers", "Contact"].map((item, i) => (
+              {["About", "Brands", "Services", "Contact"].map((item, i) => (
                 <motion.button
                   key={item}
                   initial={{ opacity: 0, y: -10 }}
@@ -583,6 +619,15 @@ export default function Home() {
                   {item}
                 </motion.button>
               ))}
+              <motion.button
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                onClick={() => setShowCareersModal(true)}
+                className="px-4 py-2 text-slate-400 hover:text-white transition-colors rounded-lg hover:bg-slate-800/50"
+              >
+                Join Our Team
+              </motion.button>
               <motion.a
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -615,15 +660,21 @@ export default function Home() {
             className="md:hidden bg-slate-900 border-t border-slate-800"
           >
             <div className="px-4 py-3 space-y-1">
-              {["About", "Brands", "Services", "Careers", "Contact"].map((item) => (
+              {["About", "Brands", "Services", "Contact"].map((item) => (
                 <button
                   key={item}
-                  onClick={() => scrollToSection(item.toLowerCase())}
+                  onClick={() => { scrollToSection(item.toLowerCase()); setMobileMenuOpen(false); }}
                   className="block w-full text-left px-4 py-3 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
                 >
                   {item}
                 </button>
               ))}
+              <button
+                onClick={() => { setShowCareersModal(true); setMobileMenuOpen(false); }}
+                className="block w-full text-left px-4 py-3 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+              >
+                Join Our Team
+              </button>
               <a
                 href="https://b2b.ietires.com"
                 target="_blank"
@@ -948,7 +999,7 @@ export default function Home() {
               <div className="grid sm:grid-cols-2 gap-4 mt-8">
                 {[
                   { icon: Shield, title: "Quality Guaranteed", desc: "Only authentic, warrantied products" },
-                  { icon: Truck, title: "Fast Delivery", desc: "Scheduled routes throughout Western PA" },
+                  { icon: Truck, title: "Fast Delivery", desc: "Serving the Tri-State area with daily delivery routes across Western Pennsylvania and West Virginia" },
                   { icon: TrendingUp, title: "Competitive Pricing", desc: "Volume discounts that add up" },
                   { icon: Users, title: "Personal Service", desc: "Your dedicated account rep" },
                 ].map((item, i) => (
@@ -1033,16 +1084,15 @@ export default function Home() {
           >
             <span className="text-red-500 font-semibold text-sm uppercase tracking-wider">Our Brands</span>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mt-3 mb-3 sm:mb-4">
-              Premium Tire Brands at Wholesale Prices
+              Tire Brands at Wholesale Prices
             </h2>
             <p className="text-slate-400 max-w-2xl mx-auto">
-              From premium OE-quality tires to value-driven options, we stock the brands
-              your customers ask for. All backed by full manufacturer warranties.
+              We stock the brands your customers ask for. All backed by full manufacturer warranties.
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-            {brands.map((brand, i) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
+            {featuredBrands.map((brand, i) => (
               <motion.div
                 key={brand.name}
                 initial={{ opacity: 0, y: 30, rotateX: -15 }}
@@ -1064,16 +1114,14 @@ export default function Home() {
                       src={brand.logo}
                       alt={brand.name}
                       className="max-h-8 sm:max-h-10 w-auto object-contain"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                        (e.target as HTMLImageElement).parentElement!.innerHTML = `<span class="text-slate-800 font-semibold text-sm">${brand.name}</span>`;
+                      }}
                     />
                   </div>
-                  <span className={`text-[10px] sm:text-xs uppercase tracking-wider px-2 py-0.5 sm:py-1 rounded-full ${
-                    brand.tier === 'premium'
-                      ? 'bg-amber-500/10 text-amber-500'
-                      : brand.tier === 'performance'
-                      ? 'bg-blue-500/10 text-blue-500'
-                      : 'bg-green-500/10 text-green-500'
-                  }`}>
-                    {brand.tier}
+                  <span className="text-[10px] sm:text-xs text-slate-400 font-medium">
+                    {brand.name}
                   </span>
                 </div>
               </motion.div>
@@ -1084,18 +1132,46 @@ export default function Home() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="mt-12 text-center"
+            className="mt-10 text-center"
           >
-            <p className="text-slate-500 mb-4">
-              + Dozens more brands in stock. Contact us for specific availability.
-            </p>
-            <button
-              onClick={() => scrollToSection("contact")}
-              className="text-red-500 hover:text-red-400 font-medium inline-flex items-center gap-2 transition-colors"
+            <motion.button
+              onClick={() => setShowAllBrands(!showAllBrands)}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="bg-slate-800/50 hover:bg-slate-800 border border-slate-700 hover:border-red-500/30 text-white px-8 py-3 rounded-xl font-semibold transition-all inline-flex items-center gap-2"
             >
-              Request Full Brand List
-              <ChevronRight size={18} />
-            </button>
+              {showAllBrands ? "Hide" : "View All Brands"}
+              <ChevronDown size={18} className={`transition-transform ${showAllBrands ? "rotate-180" : ""}`} />
+            </motion.button>
+
+            <AnimatePresence>
+              {showAllBrands && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden"
+                >
+                  <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                    {allBrands.map((brand, i) => (
+                      <motion.div
+                        key={brand}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.03 }}
+                        className="bg-slate-800/30 border border-slate-800 rounded-lg px-4 py-3 text-center"
+                      >
+                        <span className="text-slate-300 text-sm font-medium">{brand}</span>
+                      </motion.div>
+                    ))}
+                  </div>
+                  <p className="text-slate-500 text-sm mt-4">
+                    Don&apos;t see what you need? Contact us — we can source most brands.
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         </motion.div>
       </section>
@@ -1128,9 +1204,9 @@ export default function Home() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {[
-              { icon: Truck, title: "Scheduled Delivery", description: "Regular delivery routes throughout Western PA. We keep your inventory stocked so you never miss a sale." },
+              { icon: Truck, title: "Scheduled Delivery", description: "Serving the Tri-State area with daily delivery routes across Western Pennsylvania and West Virginia. We keep your inventory stocked so you never miss a sale." },
               { icon: DollarSign, title: "Wholesale Pricing", description: "Competitive pricing designed to protect your margins. Volume discounts that actually make a difference." },
-              { icon: Award, title: "50+ Brands", description: "Premium, performance, and value tires. Whatever your customers need, we have it in stock." },
+              { icon: Award, title: "50+ Brands", description: "Whatever your customers need, we have it in stock. From top-name brands to value-driven options." },
               { icon: Users, title: "Account Management", description: "A dedicated rep who knows your business. Quick answers, expert recommendations, real support." },
               { icon: Package, title: "Huge Inventory", description: "Over 100,000 tires in stock. If we have it listed, it's ready to ship today." },
               { icon: TrendingUp, title: "Flexible Terms", description: "Net terms available for qualified accounts. Payment options that work with your cash flow." },
@@ -1160,15 +1236,31 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Careers Section with AI Resume Upload */}
-      <section id="careers" className="py-16 sm:py-24 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Careers Modal Overlay */}
+      <AnimatePresence>
+        {showCareersModal && (
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-8 sm:mb-12"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] bg-slate-950/95 backdrop-blur-sm overflow-y-auto"
           >
+            <div className="min-h-screen">
+              {/* Close button */}
+              <div className="sticky top-0 z-10 flex justify-between items-center px-4 sm:px-6 lg:px-8 py-4 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/50">
+                <h2 className="text-lg font-semibold text-white">Join Our Team</h2>
+                <button
+                  onClick={() => setShowCareersModal(false)}
+                  className="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition-colors"
+                  aria-label="Close careers"
+                >
+                  <X size={24} />
+                </button>
+              </div>
+
+              <section id="careers" className="py-8 sm:py-16 relative">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8 sm:mb-12">
             <span className="text-red-500 font-semibold text-sm uppercase tracking-wider">Careers</span>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mt-3 mb-3 sm:mb-4">
               Join the IE Tire Team
@@ -1177,7 +1269,7 @@ export default function Home() {
               We&apos;re a family business that treats employees like family. Good pay,
               real benefits, and a team that has your back.
             </p>
-          </motion.div>
+          </div>
 
           {/* Success Message */}
           {submitSuccess && (
@@ -1702,8 +1794,12 @@ export default function Home() {
             </motion.div>
           )}
 
-        </div>
-      </section>
+                </div>
+              </section>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Contact Section */}
       <section id="contact" className="py-16 sm:py-24 relative bg-slate-900/50">
@@ -1893,13 +1989,40 @@ export default function Home() {
             className="mt-8 sm:mt-12 bg-slate-800/30 border border-slate-800 rounded-xl p-5 sm:p-6 lg:p-8 max-w-3xl mx-auto sm:col-span-2 lg:col-span-3"
           >
             <h3 className="text-lg sm:text-xl font-semibold text-white mb-4 sm:mb-6 text-center">Send Us a Message</h3>
-            <form className="space-y-4">
+            {contactSubmitted ? (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center py-8"
+              >
+                <CheckCircle2 className="mx-auto text-green-500 mb-3" size={48} />
+                <h4 className="text-xl font-bold text-white mb-2">Message Sent!</h4>
+                <p className="text-slate-400 mb-4">We&apos;ll get back to you as soon as possible.</p>
+                <button
+                  onClick={() => { setContactSubmitted(false); setContactForm({ name: "", business: "", email: "", phone: "", message: "" }); }}
+                  className="text-red-500 hover:text-red-400 font-medium"
+                >
+                  Send another message
+                </button>
+              </motion.div>
+            ) : (
+            <form className="space-y-4" onSubmit={(e) => {
+              e.preventDefault();
+              const subject = encodeURIComponent(`Website Inquiry from ${contactForm.name}${contactForm.business ? ` - ${contactForm.business}` : ""}`);
+              const body = encodeURIComponent(
+                `Name: ${contactForm.name}\nBusiness: ${contactForm.business || "N/A"}\nEmail: ${contactForm.email}\nPhone: ${contactForm.phone}\n\nMessage:\n${contactForm.message}`
+              );
+              window.location.href = `mailto:info@ietires.com?subject=${subject}&body=${body}`;
+              setContactSubmitted(true);
+            }}>
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm text-slate-400 mb-2">Your Name *</label>
                   <input
                     type="text"
                     required
+                    value={contactForm.name}
+                    onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
                     className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-red-500 transition-colors"
                     placeholder="John Smith"
                   />
@@ -1908,6 +2031,8 @@ export default function Home() {
                   <label className="block text-sm text-slate-400 mb-2">Business Name</label>
                   <input
                     type="text"
+                    value={contactForm.business}
+                    onChange={(e) => setContactForm({ ...contactForm, business: e.target.value })}
                     className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-red-500 transition-colors"
                     placeholder="Smith's Tire Shop"
                   />
@@ -1919,6 +2044,8 @@ export default function Home() {
                   <input
                     type="email"
                     required
+                    value={contactForm.email}
+                    onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
                     className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-red-500 transition-colors"
                     placeholder="john@tireshop.com"
                   />
@@ -1928,6 +2055,8 @@ export default function Home() {
                   <input
                     type="tel"
                     required
+                    value={contactForm.phone}
+                    onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
                     className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-red-500 transition-colors"
                     placeholder="(724) 555-0123"
                   />
@@ -1938,6 +2067,8 @@ export default function Home() {
                 <textarea
                   rows={4}
                   required
+                  value={contactForm.message}
+                  onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
                   className="w-full bg-slate-900/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-red-500 transition-colors resize-none"
                   placeholder="Tell us about your business and what you're looking for..."
                 />
@@ -1952,6 +2083,7 @@ export default function Home() {
                 Send Message
               </motion.button>
             </form>
+            )}
           </motion.div>
         </div>
       </section>
