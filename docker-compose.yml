@@ -1,0 +1,12 @@
+services:
+  web:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_CONVEX_URL: ${NEXT_PUBLIC_CONVEX_URL:-https://outstanding-dalmatian-787.convex.cloud}
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_CONVEX_URL=${NEXT_PUBLIC_CONVEX_URL:-https://outstanding-dalmatian-787.convex.cloud}
+    restart: unless-stopped
