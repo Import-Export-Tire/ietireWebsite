@@ -257,6 +257,9 @@ export default function Home() {
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [showLocationSelector, setShowLocationSelector] = useState(false);
 
+  // Ref for careers modal scrolling
+  const careersModalRef = useRef<HTMLDivElement>(null);
+
   // Open careers modal if #careers hash is in URL
   useEffect(() => {
     if (window.location.hash === '#careers') {
@@ -996,7 +999,7 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-4 mt-8">
+              <div className="grid sm:grid-cols-2 gap-3 mt-8">
                 {[
                   { icon: Shield, title: "Quality Guaranteed", desc: "Only authentic, warrantied products" },
                   { icon: Truck, title: "Fast Delivery", desc: "Serving the Tri-State area with daily delivery routes across Western Pennsylvania and West Virginia" },
@@ -1010,7 +1013,7 @@ export default function Home() {
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.1 }}
                     whileHover={{ scale: 1.02, rotateY: 5 }}
-                    className="flex gap-4 p-4 rounded-xl bg-slate-800/30 border border-slate-800 transition-all"
+                    className="flex gap-3 p-3 rounded-xl bg-slate-800/30 border border-slate-800 transition-all"
                   >
                     <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center shrink-0">
                       <item.icon size={20} className="text-red-500" />
@@ -1243,6 +1246,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            ref={careersModalRef}
             className="fixed inset-0 z-[60] bg-slate-950/95 backdrop-blur-sm overflow-y-auto"
           >
             <div className="min-h-screen">
@@ -1343,14 +1347,11 @@ export default function Home() {
                         whileTap={{ scale: 0.98 }}
                         onClick={() => {
                           setViewingJob({ ...job, _id: jobId });
-                          // Scroll to careers section to show job detail
+                          // Scroll to top of modal to show job detail
                           setTimeout(() => {
-                            const careersSection = document.getElementById("careers");
-                            if (careersSection) {
-                              const elementRect = careersSection.getBoundingClientRect();
-                              const absoluteElementTop = elementRect.top + window.pageYOffset;
-                              window.scrollTo({
-                                top: absoluteElementTop - 100,
+                            if (careersModalRef.current) {
+                              careersModalRef.current.scrollTo({
+                                top: 0,
                                 behavior: "smooth"
                               });
                             }
@@ -1527,14 +1528,11 @@ export default function Home() {
                     setViewingJob(null);
                     setShowLocationSelector(false);
                     setSelectedLocation(null);
-                    // Scroll to show the resume upload section
+                    // Scroll to top of modal to show the resume upload section
                     setTimeout(() => {
-                      const careersSection = document.getElementById("careers");
-                      if (careersSection) {
-                        const elementRect = careersSection.getBoundingClientRect();
-                        const absoluteElementTop = elementRect.top + window.pageYOffset;
-                        window.scrollTo({
-                          top: absoluteElementTop - 100,
+                      if (careersModalRef.current) {
+                        careersModalRef.current.scrollTo({
+                          top: 0,
                           behavior: "smooth"
                         });
                       }
