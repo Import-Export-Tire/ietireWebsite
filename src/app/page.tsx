@@ -1967,11 +1967,11 @@ export default function Home() {
                     <span className="font-medium">(724) 539-8705</span>
                   </a>
                   <a
-                    href="mailto:info@ietires.com"
+                    href="mailto:levi@ietires.com"
                     className="flex items-center gap-3 bg-white/10 hover:bg-white/20 rounded-lg px-4 py-3 transition-colors"
                   >
                     <Mail size={18} />
-                    <span className="font-medium">info@ietires.com</span>
+                    <span className="font-medium">levi@ietires.com</span>
                   </a>
                   </div>
                 </div>
@@ -2010,7 +2010,7 @@ export default function Home() {
               const body = encodeURIComponent(
                 `Name: ${contactForm.name}\nBusiness: ${contactForm.business || "N/A"}\nEmail: ${contactForm.email}\nPhone: ${contactForm.phone}\n\nMessage:\n${contactForm.message}`
               );
-              window.location.href = `mailto:info@ietires.com?subject=${subject}&body=${body}`;
+              window.location.href = `mailto:levi@ietires.com?subject=${subject}&body=${body}`;
               setContactSubmitted(true);
             }}>
               <div className="grid sm:grid-cols-2 gap-4">
@@ -2115,9 +2115,9 @@ export default function Home() {
                 <Phone size={20} />
               </a>
               <a
-                href="mailto:info@ietires.com"
+                href="mailto:levi@ietires.com"
                 className="text-slate-400 hover:text-white transition-colors p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
-                aria-label="Email us at info@ietires.com"
+                aria-label="Email us at levi@ietires.com"
               >
                 <Mail size={20} />
               </a>
