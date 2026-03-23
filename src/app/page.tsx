@@ -1246,13 +1246,10 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] bg-slate-950/95 backdrop-blur-sm"
+            ref={careersModalRef}
+            className="fixed inset-0 z-[60] bg-slate-950/95 backdrop-blur-sm overflow-y-auto overflow-x-hidden"
+            style={{ WebkitOverflowScrolling: 'touch' }}
           >
-            <div
-              ref={careersModalRef}
-              className="absolute inset-0 overflow-y-auto overflow-x-hidden"
-              style={{ WebkitOverflowScrolling: 'touch' }}
-            >
             <div className="pb-32">
               {/* Close button */}
               <div className="sticky top-0 z-10 flex justify-between items-center px-4 sm:px-6 lg:px-8 py-4 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/50">
@@ -1333,8 +1330,6 @@ export default function Home() {
                 ))}
               </div>
 
-              {/* Debug: remove after confirming */}
-              <p className="text-xs text-slate-500 mb-2">Convex: {convexJobs ? convexJobs.length : 'loading'} | Static: {jobs.length} | Showing: {(convexJobs || jobs).filter((job: any) => !activeJob || activeJob === null || job.department === activeJob).length}</p>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {(convexJobs || jobs)
                   .filter((job: any) => !activeJob || activeJob === null || job.department === activeJob)
@@ -1800,7 +1795,6 @@ export default function Home() {
 
                 </div>
               </section>
-            </div>
             </div>
           </motion.div>
         )}
