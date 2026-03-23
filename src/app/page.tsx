@@ -79,17 +79,17 @@ const Tire3D = ({ className = "", spinning = false }: { className?: string; spin
 );
 
 const featuredBrands = [
-  { name: "Falken", logo: "/images/brands/falken.svg" },
-  { name: "Milestar", logo: "/images/brands/milestar.webp" },
-  { name: "Cosmo", logo: "/images/brands/cosmo.webp" },
-  { name: "Lanvigator", logo: "/images/brands/lanvigator.webp" },
-  { name: "Atturo", logo: "/images/brands/atturo.webp" },
-  { name: "Kenda", logo: "/images/brands/kenda.webp" },
-  { name: "Lexani", logo: "/images/brands/lexani.webp" },
-  { name: "Lionhart", logo: "/images/brands/lionhart.webp" },
-  { name: "RBP", logo: "/images/brands/rbp.webp" },
-  { name: "Arroyo", logo: "/images/brands/arroyo.png" },
-  { name: "American Roadstar", logo: "/images/brands/american-roadstar.webp" },
+  { name: "Falken", logo: "/images/brands/falken.svg", logoClass: "" },
+  { name: "Milestar", logo: "/images/brands/milestar.webp", logoClass: "" },
+  { name: "Cosmo", logo: "/images/brands/cosmo.webp", logoClass: "" },
+  { name: "Lanvigator", logo: "/images/brands/lanvigator.webp", logoClass: "max-h-6 sm:max-h-7 mix-blend-multiply" },
+  { name: "Atturo", logo: "/images/brands/atturo.webp", logoClass: "" },
+  { name: "Kenda", logo: "/images/brands/kenda.webp", logoClass: "" },
+  { name: "Lexani", logo: "/images/brands/lexani.webp", logoClass: "max-h-5 sm:max-h-6 scale-150" },
+  { name: "Lionhart", logo: "/images/brands/lionhart.webp", logoClass: "" },
+  { name: "RBP", logo: "/images/brands/rbp.webp", logoClass: "" },
+  { name: "Arroyo", logo: "/images/brands/arroyo.png", logoClass: "max-h-full max-w-[85%]" },
+  { name: "American Roadstar", logo: "/images/brands/american-roadstar.webp", logoClass: "" },
 ];
 
 const allBrands = [
@@ -1116,7 +1116,7 @@ export default function Home() {
                     <img
                       src={brand.logo}
                       alt={brand.name}
-                      className="max-h-8 sm:max-h-10 w-auto object-contain"
+                      className={`max-h-8 sm:max-h-10 w-auto object-contain ${brand.logoClass}`}
                       onError={(e) => {
                         (e.target as HTMLImageElement).style.display = 'none';
                         (e.target as HTMLImageElement).parentElement!.innerHTML = `<span class="text-slate-800 font-semibold text-sm">${brand.name}</span>`;
