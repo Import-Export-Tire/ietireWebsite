@@ -1263,16 +1263,14 @@ export default function Home() {
                 </button>
               </div>
 
-              <section id="careers" className="py-8 sm:py-16 relative">
+              <section id="careers" className="py-4 sm:py-6 relative">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12">
-            <span className="text-red-500 font-semibold text-sm uppercase tracking-wider">Careers</span>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mt-3 mb-3 sm:mb-4">
+          <div className="text-center mb-4 sm:mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">
               Join the IE Tire Team
             </h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">
-              We&apos;re a family business that treats employees like family. Good pay,
-              real benefits, and a team that has your back.
+            <p className="text-slate-400 text-sm">
+              Good pay, real benefits, and a team that has your back.
             </p>
           </div>
 
@@ -1302,19 +1300,13 @@ export default function Home() {
               viewport={{ once: true }}
               className="mb-8 sm:mb-12 pb-16"
             >
-              <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-xl sm:rounded-2xl p-5 sm:p-8 text-center mb-8">
-                <div className="flex items-center justify-center gap-2 mb-3 sm:mb-4">
-                  <Briefcase className="text-amber-500" size={20} />
-                  <span className="text-amber-500 font-semibold text-sm sm:text-base">Step 1</span>
-                </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3">Select a Position to Apply For</h3>
-                <p className="text-slate-400 text-sm sm:text-base">
-                  Browse our open positions and click one to view details.
-                </p>
+              <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-lg p-3 sm:p-4 text-center mb-4 flex items-center justify-center gap-3">
+                <Briefcase className="text-amber-500 shrink-0" size={18} />
+                <span className="text-white font-medium text-sm">Select a position to apply for</span>
               </div>
 
               {/* Department filters */}
-              <div className="flex flex-wrap justify-center gap-2 mb-6">
+              <div className="flex flex-wrap justify-center gap-2 mb-4">
                 {['All', ...Array.from(new Set((convexJobs || jobs).map((j: any) => j.department)))].map((dept) => (
                   <button
                     key={dept}
