@@ -2004,13 +2004,24 @@ export default function Home() {
                 </button>
               </motion.div>
             ) : (
-            <form className="space-y-4" onSubmit={(e) => {
+            <form className="space-y-4" onSubmit={async (e) => {
               e.preventDefault();
-              const subject = encodeURIComponent(`Website Inquiry from ${contactForm.name}${contactForm.business ? ` - ${contactForm.business}` : ""}`);
-              const body = encodeURIComponent(
-                `Name: ${contactForm.name}\nBusiness: ${contactForm.business || "N/A"}\nEmail: ${contactForm.email}\nPhone: ${contactForm.phone}\n\nMessage:\n${contactForm.message}`
-              );
-              window.location.href = `mailto:levi@ietires.com?subject=${subject}&body=${body}`;
+              try {
+                // Send to IECentral website messages
+                await fetch('/api/contact', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(contactForm),
+                });
+                // Also send email to Levi
+                const subject = encodeURIComponent(`Website Inquiry from ${contactForm.name}${contactForm.business ? ` - ${contactForm.business}` : ""}`);
+                const body = encodeURIComponent(
+                  `Name: ${contactForm.name}\nBusiness: ${contactForm.business || "N/A"}\nEmail: ${contactForm.email}\nPhone: ${contactForm.phone}\n\nMessage:\n${contactForm.message}`
+                );
+                window.location.href = `mailto:levi@ietires.com?subject=${subject}&body=${body}`;
+              } catch (err) {
+                console.error('Failed to submit contact form:', err);
+              }
               setContactSubmitted(true);
             }}>
               <div className="grid sm:grid-cols-2 gap-4">
