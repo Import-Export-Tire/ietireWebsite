@@ -1246,10 +1246,13 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            ref={careersModalRef}
             className="fixed inset-0 z-[60] bg-slate-950/95 backdrop-blur-sm"
-            style={{ overflowY: 'auto', overflowX: 'hidden', WebkitOverflowScrolling: 'touch', height: '100%' }}
           >
+            <div
+              ref={careersModalRef}
+              className="absolute inset-0 overflow-y-auto overflow-x-hidden"
+              style={{ WebkitOverflowScrolling: 'touch' }}
+            >
             <div className="pb-32">
               {/* Close button */}
               <div className="sticky top-0 z-10 flex justify-between items-center px-4 sm:px-6 lg:px-8 py-4 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/50">
@@ -1797,6 +1800,7 @@ export default function Home() {
 
                 </div>
               </section>
+            </div>
             </div>
           </motion.div>
         )}
