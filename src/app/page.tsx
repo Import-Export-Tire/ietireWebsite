@@ -82,7 +82,7 @@ const featuredBrands = [
   { name: "Falken", logo: "/images/brands/falken.svg" },
   { name: "Milestar", logo: "/images/brands/milestar.webp" },
   { name: "Cosmo", logo: "/images/brands/cosmo.webp" },
-  { name: "Lanvigator", logo: "/images/brands/lanvigator.webp?v=2" },
+  { name: "Lanvigator", logo: "/images/brands/lanvigator.webp?v=3" },
   { name: "Atturo", logo: "/images/brands/atturo.webp" },
   { name: "Kenda", logo: "/images/brands/kenda.webp" },
   { name: "Lexani", logo: "/images/brands/lexani.webp?v=2" },
