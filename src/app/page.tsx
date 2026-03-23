@@ -1314,7 +1314,7 @@ export default function Home() {
 
               {/* Department filters */}
               <div className="flex flex-wrap justify-center gap-2 mb-6">
-                {['All', 'Operations', 'Management', 'Sales', 'Technology', 'Administration'].map((dept) => (
+                {['All', ...Array.from(new Set((convexJobs || jobs).map((j: any) => j.department)))].map((dept) => (
                   <button
                     key={dept}
                     onClick={() => setActiveJob(dept === 'All' ? null : dept)}
