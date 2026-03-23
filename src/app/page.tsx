@@ -1247,10 +1247,10 @@ export default function Home() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             ref={careersModalRef}
-            className="fixed inset-0 z-[60] bg-slate-950/95 backdrop-blur-sm overflow-y-auto"
-            style={{ WebkitOverflowScrolling: 'touch' }}
+            className="fixed inset-0 z-[60] bg-slate-950/95 backdrop-blur-sm"
+            style={{ overflowY: 'auto', overflowX: 'hidden', WebkitOverflowScrolling: 'touch', height: '100%' }}
           >
-            <div className="min-h-screen pb-24">
+            <div className="pb-32">
               {/* Close button */}
               <div className="sticky top-0 z-10 flex justify-between items-center px-4 sm:px-6 lg:px-8 py-4 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/50">
                 <h2 className="text-lg font-semibold text-white">Join Our Team</h2>
