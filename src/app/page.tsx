@@ -1329,6 +1329,8 @@ export default function Home() {
                 ))}
               </div>
 
+              {/* Debug: remove after confirming */}
+              <p className="text-xs text-slate-500 mb-2">Convex: {convexJobs ? convexJobs.length : 'loading'} | Static: {jobs.length} | Showing: {(convexJobs || jobs).filter((job: any) => !activeJob || activeJob === null || job.department === activeJob).length}</p>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {(convexJobs || jobs)
                   .filter((job: any) => !activeJob || activeJob === null || job.department === activeJob)
