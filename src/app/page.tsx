@@ -1248,8 +1248,9 @@ export default function Home() {
             exit={{ opacity: 0 }}
             ref={careersModalRef}
             className="fixed inset-0 z-[60] bg-slate-950/95 backdrop-blur-sm overflow-y-auto"
+            style={{ WebkitOverflowScrolling: 'touch' }}
           >
-            <div className="min-h-screen">
+            <div className="min-h-screen pb-24">
               {/* Close button */}
               <div className="sticky top-0 z-10 flex justify-between items-center px-4 sm:px-6 lg:px-8 py-4 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/50">
                 <h2 className="text-lg font-semibold text-white">Join Our Team</h2>
@@ -1299,7 +1300,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="mb-8 sm:mb-12"
+              className="mb-8 sm:mb-12 pb-16"
             >
               <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-xl sm:rounded-2xl p-5 sm:p-8 text-center mb-8">
                 <div className="flex items-center justify-center gap-2 mb-3 sm:mb-4">
@@ -1656,7 +1657,7 @@ export default function Home() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="max-w-2xl mx-auto mb-12"
+              className="max-w-2xl mx-auto mb-24"
             >
               <div className="bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6">
                 {/* Selected Job Header */}
