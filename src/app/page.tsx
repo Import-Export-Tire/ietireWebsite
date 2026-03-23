@@ -1001,10 +1001,10 @@ export default function Home() {
 
               <div className="grid sm:grid-cols-2 gap-3 mt-8">
                 {[
-                  { icon: Shield, title: "Quality Guaranteed", desc: "Only authentic, warrantied products" },
-                  { icon: Truck, title: "Fast Delivery", desc: "Serving the Tri-State area with daily delivery routes across Western Pennsylvania and West Virginia" },
-                  { icon: TrendingUp, title: "Competitive Pricing", desc: "Volume discounts that add up" },
-                  { icon: Users, title: "Personal Service", desc: "Your dedicated account rep" },
+                  { icon: Shield, title: "Quality Guaranteed", desc: "Every tire backed by full manufacturer warranties" },
+                  { icon: Truck, title: "Fast Delivery", desc: "Daily delivery routes across Western PA and West Virginia" },
+                  { icon: TrendingUp, title: "Competitive Pricing", desc: "Volume discounts that help your bottom line" },
+                  { icon: Users, title: "Personal Service", desc: "A dedicated rep who knows your business" },
                 ].map((item, i) => (
                   <motion.div
                     key={i}
