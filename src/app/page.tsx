@@ -1503,8 +1503,9 @@ export default function Home() {
 
               </div>
 
-              {/* Apply Button — sticky at bottom */}
-              <div className="sticky bottom-0 max-w-3xl mx-auto mt-4 pb-4">
+              {/* Apply Button — fixed at bottom of screen */}
+              <div className="fixed bottom-0 left-0 right-0 z-20 px-4 sm:px-6 pb-6 pt-4 bg-gradient-to-t from-slate-950 via-slate-950/95 to-transparent">
+                <div className="max-w-3xl mx-auto">
                 <motion.button
                   onClick={() => {
                     const jobLocations = viewingJob.locations || [viewingJob.location];
@@ -1548,6 +1549,7 @@ export default function Home() {
                     ? 'Select a location above'
                     : `Apply for ${viewingJob.title}`}
                 </motion.button>
+                </div>
               </div>
             </motion.div>
           )}
