@@ -1501,7 +1501,10 @@ export default function Home() {
                   </motion.div>
                 )}
 
-                {/* Apply Button */}
+              </div>
+
+              {/* Apply Button — sticky at bottom */}
+              <div className="sticky bottom-0 max-w-3xl mx-auto mt-4 pb-4">
                 <motion.button
                   onClick={() => {
                     const jobLocations = viewingJob.locations || [viewingJob.location];
@@ -1534,7 +1537,7 @@ export default function Home() {
                   disabled={showLocationSelector && viewingJob.locations && viewingJob.locations.length > 1 && !selectedLocation}
                   whileHover={{ scale: (showLocationSelector && !selectedLocation) ? 1 : 1.02 }}
                   whileTap={{ scale: (showLocationSelector && !selectedLocation) ? 1 : 0.98 }}
-                  className={`w-full py-4 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 ${
+                  className={`w-full py-4 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 shadow-lg shadow-slate-950/50 ${
                     showLocationSelector && viewingJob.locations && viewingJob.locations.length > 1 && !selectedLocation
                       ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
                       : 'bg-red-600 hover:bg-red-500 hover:shadow-lg hover:shadow-red-500/25 text-white'
