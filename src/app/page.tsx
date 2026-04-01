@@ -90,12 +90,14 @@ const featuredBrands = [
   { name: "RBP", logo: "/images/brands/rbp.webp" },
   { name: "Arroyo", logo: "/images/brands/arroyo.webp" },
   { name: "American Roadstar", logo: "/images/brands/american-roadstar.webp" },
+  { name: "Nexen", logo: "/images/brands/nexen.webp" },
 ];
 
 const allBrands = [
   "American Roadstar", "Arroyo", "Atturo",
   "Cosmo",
   "Falken",
+  "Nexen",
   "Kenda",
   "Lancaster", "Lanvigator", "Lexani", "Lionhart",
   "Milestar",
@@ -205,14 +207,19 @@ const jobs = [
   },
 ];
 
-// 3D Card component with mouse tracking
+// 3D Card component with mouse tracking (disabled on touch devices)
 function Card3D({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
+  const [isTouch, setIsTouch] = useState(false);
+
+  useEffect(() => {
+    setIsTouch(window.matchMedia('(hover: none)').matches);
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
+    if (!ref.current || isTouch) return;
     const rect = ref.current.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
@@ -227,6 +234,11 @@ function Card3D({ children, className = "" }: { children: React.ReactNode; class
     setRotateX(0);
     setRotateY(0);
   };
+
+  // On touch devices, render a plain div — no 3D compositing overhead
+  if (isTouch) {
+    return <div className={className}>{children}</div>;
+  }
 
   return (
     <motion.div
@@ -268,14 +280,33 @@ export default function Home() {
     }
   }, []);
 
-  // Lock body scroll when careers modal is open
+  // Lock body scroll when careers modal is open (iOS-safe approach)
   useEffect(() => {
     if (showCareersModal) {
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
       document.body.style.overflow = 'hidden';
     } else {
+      const top = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
       document.body.style.overflow = '';
+      if (top) window.scrollTo(0, parseInt(top) * -1);
     }
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      const top = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.overflow = '';
+      if (top) window.scrollTo(0, parseInt(top) * -1);
+    };
   }, [showCareersModal]);
 
   // Track scroll position for return to top button
@@ -285,6 +316,15 @@ export default function Home() {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Detect mobile for performance optimization (skip parallax, 3D effects)
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
   }, []);
 
   const scrollToTop = () => {
@@ -584,7 +624,7 @@ export default function Home() {
   };
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-slate-950 overflow-x-hidden" style={{ perspective: "1000px" }}>
+    <div ref={containerRef} className="min-h-screen bg-slate-950 overflow-x-hidden">
       {/* Navigation */}
       <nav
         className="fixed top-0 left-0 right-0 z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/50"
@@ -698,25 +738,23 @@ export default function Home() {
       <section className="relative min-h-screen flex items-center pt-16 overflow-hidden" aria-label="Hero">
         {/* Animated background layers */}
         <motion.div
-          style={{ y: bgLayerY }}
+          style={isMobile ? undefined : { y: bgLayerY }}
           className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950"
         />
 
-        {/* Floating orbs with depth */}
-        <motion.div
-          style={{
-            y: orb1Y,
-            scale: orb1Scale,
-          }}
-          className="absolute top-20 right-10 w-72 h-72 bg-red-500/10 rounded-full blur-[100px]"
-        />
-        <motion.div
-          style={{
-            y: orb2Y,
-            x: orb2X,
-          }}
-          className="absolute bottom-40 left-10 w-96 h-96 bg-blue-500/5 rounded-full blur-[120px]"
-        />
+        {/* Floating orbs with depth — hidden on mobile (GPU-expensive blur) */}
+        {!isMobile && (
+          <>
+            <motion.div
+              style={{ y: orb1Y, scale: orb1Scale }}
+              className="absolute top-20 right-10 w-72 h-72 bg-red-500/10 rounded-full blur-[100px]"
+            />
+            <motion.div
+              style={{ y: orb2Y, x: orb2X }}
+              className="absolute bottom-40 left-10 w-96 h-96 bg-blue-500/5 rounded-full blur-[120px]"
+            />
+          </>
+        )}
 
         {/* ENHANCED: Floating tire silhouettes at different depths - hidden on mobile for performance */}
         {/* Far background tire - very slow parallax */}
@@ -803,14 +841,14 @@ export default function Home() {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* Left content with parallax */}
             <motion.div
-              style={{ y: heroY, rotateZ: heroRotate }}
+              style={isMobile ? undefined : { y: heroY, rotateZ: heroRotate }}
               className="origin-center"
             >
               <motion.div
                 initial={{ opacity: 0, y: 30, rotateX: -15 }}
                 animate={{ opacity: 1, y: 0, rotateX: 0 }}
                 transition={{ duration: 0.8 }}
-                style={{ transformStyle: "preserve-3d" }}
+                style={isMobile ? undefined : { transformStyle: "preserve-3d" }}
               >
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-medium mb-6">
                   <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
@@ -891,7 +929,7 @@ export default function Home() {
 
             {/* Stats Card with 3D effect */}
             <motion.div
-              style={{ y: statsY, rotateX: statsRotateX }}
+              style={isMobile ? undefined : { y: statsY, rotateX: statsRotateX }}
               className="relative"
             >
               <Card3D className="cursor-default">
@@ -900,7 +938,7 @@ export default function Home() {
                   animate={{ opacity: 1, scale: 1, rotateY: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
                   className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:p-10 border border-slate-700/50 shadow-2xl"
-                  style={{ transformStyle: "preserve-3d" }}
+                  style={isMobile ? undefined : { transformStyle: "preserve-3d" }}
                 >
                   <div className="grid grid-cols-2 gap-3 sm:gap-6">
                     {[
@@ -941,7 +979,7 @@ export default function Home() {
                 initial={{ opacity: 0, scale: 0, rotate: -10 }}
                 animate={{ opacity: 1, scale: 1, rotate: 0 }}
                 transition={{ delay: 1, type: "spring" }}
-                className="absolute -top-4 -right-4 bg-green-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg"
+                className="absolute -top-4 right-2 sm:-right-4 bg-green-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg"
               >
                 Open Mon-Fri
               </motion.div>
@@ -1056,7 +1094,7 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.5 }}
                 whileHover={{ scale: 1.05 }}
-                className="absolute -bottom-6 -left-6 bg-slate-800 border border-slate-700 rounded-xl p-5 shadow-xl"
+                className="hidden sm:block absolute -bottom-6 -left-6 bg-slate-800 border border-slate-700 rounded-xl p-5 shadow-xl"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-red-500/10 rounded-full flex items-center justify-center">
@@ -1076,7 +1114,7 @@ export default function Home() {
       {/* Brands Section with 3D hover */}
       <section id="brands" className="py-16 sm:py-24 relative overflow-hidden">
         <motion.div
-          style={{ y: statsSectionY }}
+          style={isMobile ? undefined : { y: statsSectionY }}
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
         >
           <motion.div
@@ -1246,13 +1284,10 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            ref={careersModalRef}
-            className="fixed inset-0 z-[60] bg-slate-950/95 backdrop-blur-sm overflow-y-auto overflow-x-hidden"
-            style={{ WebkitOverflowScrolling: 'touch' }}
+            className="fixed inset-0 z-[60] bg-slate-950 flex flex-col"
           >
-            <div className="pb-32">
-              {/* Close button */}
-              <div className="sticky top-0 z-10 flex justify-between items-center px-4 sm:px-6 lg:px-8 py-4 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/50">
+              {/* Header — outside scroll area */}
+              <div className="flex-shrink-0 flex justify-between items-center px-4 sm:px-6 lg:px-8 py-4 bg-slate-950 border-b border-slate-800/50">
                 <h2 className="text-lg font-semibold text-white">Join Our Team</h2>
                 <button
                   onClick={() => setShowCareersModal(false)}
@@ -1263,6 +1298,9 @@ export default function Home() {
                 </button>
               </div>
 
+              {/* Scrollable content area */}
+              <div ref={careersModalRef} className="flex-1 overflow-y-auto overscroll-contain" style={{ WebkitOverflowScrolling: 'touch' }}>
+              <div className="pb-8">
               <section id="careers" className="py-4 sm:py-6 relative">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-4 sm:mb-6">
@@ -1298,7 +1336,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="mb-8 sm:mb-12 pb-16"
+              className="mb-8 sm:mb-12"
             >
               <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-lg p-3 sm:p-4 text-center mb-4 flex items-center justify-center gap-3">
                 <Briefcase className="text-amber-500 shrink-0" size={18} />
@@ -1501,56 +1539,49 @@ export default function Home() {
                   </motion.div>
                 )}
 
+                {/* Apply Button — inside job detail card */}
+                <div className="mt-8">
+                  <button
+                    onClick={() => {
+                      const jobLocations = viewingJob.locations || [viewingJob.location];
+                      if (jobLocations.length > 1 && !selectedLocation && !showLocationSelector) {
+                        setShowLocationSelector(true);
+                        return;
+                      }
+                      if (jobLocations.length > 1 && !selectedLocation) {
+                        return;
+                      }
+                      const finalLocation = selectedLocation || jobLocations[0];
+                      setSelectedJobId(viewingJob._id);
+                      setSelectedJobTitle(`${viewingJob.title} - ${finalLocation}`);
+                      setViewingJob(null);
+                      setShowLocationSelector(false);
+                      setSelectedLocation(null);
+                      setTimeout(() => {
+                        if (careersModalRef.current) {
+                          careersModalRef.current.scrollTo({
+                            top: 0,
+                            behavior: "smooth"
+                          });
+                        }
+                      }, 50);
+                    }}
+                    disabled={showLocationSelector && viewingJob.locations && viewingJob.locations.length > 1 && !selectedLocation}
+                    className={`w-full py-4 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 text-lg ${
+                      showLocationSelector && viewingJob.locations && viewingJob.locations.length > 1 && !selectedLocation
+                        ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
+                        : 'bg-red-600 hover:bg-red-500 hover:shadow-lg hover:shadow-red-500/25 text-white'
+                    }`}
+                  >
+                    <Briefcase size={18} />
+                    {showLocationSelector && viewingJob.locations && viewingJob.locations.length > 1 && !selectedLocation
+                      ? 'Select a location above'
+                      : `Apply for ${viewingJob.title}`}
+                  </button>
+                </div>
+
               </div>
 
-              {/* Apply Button — fixed at bottom of screen */}
-              <div className="fixed bottom-0 left-0 right-0 z-20 px-4 sm:px-6 pb-6 pt-4 bg-gradient-to-t from-slate-950 via-slate-950/95 to-transparent">
-                <div className="max-w-3xl mx-auto">
-                <motion.button
-                  onClick={() => {
-                    const jobLocations = viewingJob.locations || [viewingJob.location];
-                    // If multiple locations and none selected yet, show location selector
-                    if (jobLocations.length > 1 && !selectedLocation && !showLocationSelector) {
-                      setShowLocationSelector(true);
-                      return;
-                    }
-                    // If multiple locations, require selection
-                    if (jobLocations.length > 1 && !selectedLocation) {
-                      return; // Location selector is shown, wait for selection
-                    }
-                    // Proceed to Step 2
-                    const finalLocation = selectedLocation || jobLocations[0];
-                    setSelectedJobId(viewingJob._id);
-                    setSelectedJobTitle(`${viewingJob.title} - ${finalLocation}`);
-                    setViewingJob(null);
-                    setShowLocationSelector(false);
-                    setSelectedLocation(null);
-                    // Scroll to top of modal to show the resume upload section
-                    setTimeout(() => {
-                      if (careersModalRef.current) {
-                        careersModalRef.current.scrollTo({
-                          top: 0,
-                          behavior: "smooth"
-                        });
-                      }
-                    }, 50);
-                  }}
-                  disabled={showLocationSelector && viewingJob.locations && viewingJob.locations.length > 1 && !selectedLocation}
-                  whileHover={{ scale: (showLocationSelector && !selectedLocation) ? 1 : 1.02 }}
-                  whileTap={{ scale: (showLocationSelector && !selectedLocation) ? 1 : 0.98 }}
-                  className={`w-full py-4 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 shadow-lg shadow-slate-950/50 ${
-                    showLocationSelector && viewingJob.locations && viewingJob.locations.length > 1 && !selectedLocation
-                      ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
-                      : 'bg-red-600 hover:bg-red-500 hover:shadow-lg hover:shadow-red-500/25 text-white'
-                  }`}
-                >
-                  <Briefcase size={18} />
-                  {showLocationSelector && viewingJob.locations && viewingJob.locations.length > 1 && !selectedLocation
-                    ? 'Select a location above'
-                    : `Apply for ${viewingJob.title}`}
-                </motion.button>
-                </div>
-              </div>
             </motion.div>
           )}
 
@@ -1793,6 +1824,8 @@ export default function Home() {
                 </div>
               </section>
             </div>
+            </div>
+
           </motion.div>
         )}
       </AnimatePresence>

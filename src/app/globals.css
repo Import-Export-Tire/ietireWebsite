@@ -4,12 +4,16 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  width: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
 /* Custom scrollbar */
@@ -89,4 +93,13 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="password
 
 .cursor-grabbing {
   cursor: grabbing;
+}
+
+/* Disable custom cursors on touch devices — they don't apply and add overhead */
+@media (hover: none) and (pointer: coarse) {
+  *, *::before, *::after,
+  a, button, [role="button"],
+  input, textarea, select {
+    cursor: auto !important;
+  }
 }
