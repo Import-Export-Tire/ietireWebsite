@@ -90,7 +90,7 @@ const featuredBrands = [
   { name: "RBP", logo: "/images/brands/rbp.webp" },
   { name: "Arroyo", logo: "/images/brands/arroyo.webp" },
   { name: "American Roadstar", logo: "/images/brands/american-roadstar.webp" },
-  { name: "Nexen", logo: "/images/brands/nexen.webp" },
+  { name: "Nexen", logo: "/images/brands/nexen.webp?v=2" },
 ];
 
 const allBrands = [
