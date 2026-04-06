@@ -1150,11 +1150,11 @@ export default function Home() {
                 style={{ transformStyle: "preserve-3d" }}
               >
                 <div className="flex flex-col items-center gap-2 sm:gap-3">
-                  <div className="h-12 sm:h-14 w-full flex items-center justify-center px-2 sm:px-3 bg-white/90 rounded-lg">
+                  <div className="h-14 sm:h-16 w-full flex items-center justify-center px-2 sm:px-3 bg-white/90 rounded-lg">
                     <img
                       src={brand.logo}
                       alt={brand.name}
-                      className="max-h-8 sm:max-h-10 w-auto object-contain"
+                      className="max-h-full max-w-full object-contain"
                       onError={(e) => {
                         (e.target as HTMLImageElement).style.display = 'none';
                         (e.target as HTMLImageElement).parentElement!.innerHTML = `<span class="text-slate-800 font-semibold text-sm">${brand.name}</span>`;
