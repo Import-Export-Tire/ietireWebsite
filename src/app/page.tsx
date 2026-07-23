@@ -1484,10 +1484,47 @@ export default function Home() {
                 </div>
 
                 {/* Job Description */}
-                <div className="mb-6">
-                  <h4 className="text-lg font-semibold text-white mb-3">About This Position</h4>
-                  <p className="text-slate-300 leading-relaxed">{viewingJob.description}</p>
-                </div>
+                {(viewingJob.summary ||
+                  viewingJob.responsibilities?.length ||
+                  viewingJob.requirements?.length) ? (
+                  <>
+                    {viewingJob.summary && (
+                      <div className="mb-6">
+                        <h4 className="text-lg font-semibold text-white mb-3">About This Position</h4>
+                        <p className="text-slate-300 leading-relaxed whitespace-pre-line">
+                          {viewingJob.summary}
+                        </p>
+                      </div>
+                    )}
+                    {viewingJob.responsibilities?.length > 0 && (
+                      <div className="mb-6">
+                        <h4 className="text-lg font-semibold text-white mb-3">What You&apos;ll Do</h4>
+                        <ul className="list-disc pl-5 space-y-1 text-slate-300 leading-relaxed">
+                          {viewingJob.responsibilities.map((item: string, i: number) => (
+                            <li key={i}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {viewingJob.requirements?.length > 0 && (
+                      <div className="mb-6">
+                        <h4 className="text-lg font-semibold text-white mb-3">What We&apos;re Looking For</h4>
+                        <ul className="list-disc pl-5 space-y-1 text-slate-300 leading-relaxed">
+                          {viewingJob.requirements.map((item: string, i: number) => (
+                            <li key={i}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="mb-6">
+                    <h4 className="text-lg font-semibold text-white mb-3">About This Position</h4>
+                    <p className="text-slate-300 leading-relaxed whitespace-pre-line">
+                      {viewingJob.description}
+                    </p>
+                  </div>
+                )}
 
                 {/* Benefits */}
                 {viewingJob.benefits && viewingJob.benefits.length > 0 && (
